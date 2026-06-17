@@ -106,3 +106,10 @@ class Stock {
 | 낙관적 락 | 락 없이 빠름 | 충돌 시 예외 처리 | 충돌 드물고 한 명만 성공시키면 될 때 |
 
 <div class="callout callout-tip"><span class="callout-label">정리</span>InnoDB의 RR이 팬텀을 막는 건 <b>MVCC 스냅샷</b> 덕분이고, 그 보호는 <b>일반 읽기에 한정</b>됩니다. <code>FOR UPDATE</code>처럼 현재 데이터를 읽는 순간 스냅샷 밖으로 나가 팬텀이 보일 수 있어요. 그래서 정합성이 절대적인 흐름은 <em>스냅샷에 기대지 말고</em> 비관적·낙관적 락으로 명시적으로 지킵니다.</div>
+
+## 참고
+
+- [MySQL 트랜잭션 격리 수준 공식 문서](https://dev.mysql.com/doc/refman/8.0/en/innodb-transaction-isolation-levels.html)
+- [JPA 트랜잭션 전파와 격리 — Baeldung](https://www.baeldung.com/spring-transactional-propagation-isolation)
+- [JPA 낙관적 락 — Baeldung](https://www.baeldung.com/jpa-optimistic-locking)
+- [JPA 더티 체킹 — 기억보단 기록을](https://jojoldu.tistory.com/415)

@@ -1,7 +1,7 @@
 <script setup>
 import { computed } from 'vue'
-import { categories } from '../data/categories.js'
-import { articles, articlesByCategory, todaysArticle, articleById } from '../data/articles.js'
+import { categories, categoryOf } from '../data/categories.js'
+import { articlesByCategory, todaysArticle, articleById } from '../data/articles.js'
 import { useLibrary } from '../composables/useLibrary.js'
 
 const { inProgress, readCount, progressOf } = useLibrary()
@@ -37,7 +37,7 @@ const cats = computed(() =>
 
     <!-- 오늘의 지식 -->
     <RouterLink :to="`/article/${today.id}`" class="hero">
-      <div class="kicker">{{ today.categoryId.toUpperCase() }}</div>
+      <div class="kicker">{{ categoryOf(today.categoryId)?.name }}</div>
       <h2>{{ today.title }}</h2>
       <p>{{ today.summary }}</p>
       <div class="go">읽기 →</div>

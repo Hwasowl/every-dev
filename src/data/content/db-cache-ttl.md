@@ -41,3 +41,9 @@ flowchart TD
 ```
 
 <div class="callout callout-q"><span class="callout-label">기억할 것</span>캐시 키는 도메인 속성 기준으로 구체적으로 짜고, 항상 <b>"캐시가 없으면?"</b> 시나리오를 함께 설계하세요. 중요한 비즈니스 데이터는 캐시보다 DB 정합성이 우선입니다.</div>
+
+## 참고
+
+- [Spring Caching 공식 문서](https://docs.spring.io/spring-boot/reference/io/caching.html)
+- [Spring Data Redis — Baeldung](https://www.baeldung.com/spring-data-redis-tutorial)
+- [Materialized View — AWS](https://aws.amazon.com/ko/what-is/materialized-view/)
