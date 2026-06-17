@@ -1,4 +1,4 @@
-실시간 랭킹은 조회 빈도가 매우 높은데, RDB의 `GROUP BY + ORDER BY` 는 데이터가 쌓일수록 느려지고 DB 과부하로 이어집니다. 그래서 랭킹엔 보통 **Redis Sorted Set(ZSET)**을 씁니다.
+실시간 랭킹은 조회 빈도가 매우 높은데, RDB의 `GROUP BY + ORDER BY` 는 데이터가 쌓일수록 느려지고 DB 과부하로 이어집니다. 그래서 랭킹엔 보통 **Redis Sorted Set**(ZSET)을 씁니다.
 
 ## ZSET — 정렬을 내장한 자료구조
 
