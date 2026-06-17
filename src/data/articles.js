@@ -10,8 +10,8 @@ export const articles = [
     id: 'db-phantom-read',
     categoryId: 'database',
     title: 'RepeatableRead인데 Phantom Read가 없다고?',
-    summary: 'InnoDB가 표준과 달리 팬텀을 막는 진짜 이유, 그리고 FOR UPDATE의 반전.',
-    minutes: 7,
+    summary: '격리 수준 4단계부터 MVCC 스냅샷, FOR UPDATE의 반전, 그리고 락 전략까지.',
+    minutes: 9,
     body: dbPhantom,
   },
   {

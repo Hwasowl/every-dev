@@ -1,4 +1,21 @@
-교과서대로면 **REPEATABLE READ** 는 팬텀 리드를 _허용_ 합니다. 그런데 MySQL InnoDB에서 똑같은 조회를 두 번 날려보면, 중간에 다른 트랜잭션이 행을 끼워 넣어도 새 행이 보이지 않아요. 표준을 어긴 걸까요? 아닙니다. InnoDB가 한 수 더 둔 겁니다.
+교과서대로면 **REPEATABLE READ** 는 팬텀 리드를 _허용_ 합니다. 그런데 MySQL InnoDB에서 똑같은 조회를 두 번 날려보면, 중간에 다른 트랜잭션이 행을 끼워 넣어도 새 행이 보이지 않아요. 표준을 어긴 걸까요? 아닙니다. InnoDB가 한 수 더 둔 겁니다. 그 이유를 격리 수준부터 차근차근 풀어봅니다.
+
+## 먼저, 격리 수준 4단계
+
+트랜잭션의 **격리성(Isolation)** 은 동시에 도는 트랜잭션들이 서로 얼마나 간섭하지 못하게 막느냐의 단계입니다. 단계가 높아질수록 안전하지만 동시성은 떨어지죠. 각 단계가 막아주는 _이상 현상_ 은 셋입니다.
+
+- **Dirty Read** — 다른 트랜잭션이 _아직 커밋하지 않은_ 데이터를 읽는 것
+- **Non-repeatable Read** — 같은 행을 두 번 읽었는데 _값이 바뀌어_ 있는 것
+- **Phantom Read** — 같은 조건으로 두 번 조회했는데 _없던 행이 새로_ 나타나는 것 (예: `WHERE price > 10000`)
+
+| 격리 수준 | Dirty | Non-repeatable | Phantom |
+| --- | --- | --- | --- |
+| READ UNCOMMITTED | 발생 | 발생 | 발생 |
+| READ COMMITTED | 방지 | 발생 | 발생 |
+| REPEATABLE READ | 방지 | 방지 | 발생 _(InnoDB는 방지)_ |
+| SERIALIZABLE | 방지 | 방지 | 방지 |
+
+표의 마지막 칸이 오늘의 주인공입니다. 표준상 RR은 팬텀을 허용하는데, **InnoDB만 유독 막아줍니다.** 어떻게?
 
 ## 스냅샷을 읽기 때문이다
 
@@ -60,4 +77,32 @@ flowchart TD
 
 <div class="callout callout-q"><span class="callout-label">한 걸음 더</span>그럼 InnoDB는 잠금 읽기의 팬텀을 못 막나? — <b>Next-Key Lock</b>(레코드 락 + 갭 락)으로 막습니다. 단, <em>처음부터</em> 잠금 읽기로 범위를 잠갔을 때 얘기예요. 위 예시는 일반 읽기로 갭을 안 잠근 채 세션 B가 끼어들 수 있었기 때문에 팬텀이 난 겁니다.</div>
 
-정리하면 — InnoDB의 RR이 팬텀을 막는 건 **MVCC 스냅샷** 덕분이고, 그 보호는 **일반 읽기에 한정** 됩니다. `FOR UPDATE` 처럼 현재 데이터를 읽는 순간 스냅샷 밖으로 나가고, 팬텀이 보일 수 있습니다.
+## 실무에선 — 락 전략으로 막는다
+
+팬텀을 만든 그 `FOR UPDATE` 가 사실은 **비관적 락** 의 도구입니다. 정합성이 중요한 흐름(재고·좌석·포인트)에선 _처음부터_ 의도적으로 락을 걸어, 다른 트랜잭션이 끼어들 틈(갭)을 없앱니다. JPA는 두 가지 전략을 줍니다.
+
+**😠 비관적 락** — 읽는 순간 DB에 락을 걸어 남이 못 건드리게 선점합니다. `SELECT … FOR UPDATE` 가 이것이고, JPA에선 `@Lock(PESSIMISTIC_WRITE)`. 안정적이지만 대기·데드락·성능 비용이 있습니다.
+
+```java
+@Lock(LockModeType.PESSIMISTIC_WRITE)
+@Query("SELECT s FROM Stock s WHERE s.id = :id")
+Stock findByIdForUpdate(@Param("id") Long id);
+```
+
+**🙂 낙관적 락** — 락을 걸지 않고, 커밋 시점에 버전(`@Version`)을 비교해 충돌을 감지합니다. 충돌하면 `OptimisticLockingFailureException` 으로 한 명만 성공시키고 나머지는 실패·재시도합니다.
+
+```java
+@Entity
+class Stock {
+    @Id Long id;
+    int quantity;
+    @Version Long version;
+}
+```
+
+| 전략 | 장점 | 단점 | 적합한 상황 |
+| --- | --- | --- | --- |
+| 비관적 락 | 정합성 보장 | 데드락·성능 저하 | 충돌 잦고 꼭 지켜야 할 자원 |
+| 낙관적 락 | 락 없이 빠름 | 충돌 시 예외 처리 | 충돌 드물고 한 명만 성공시키면 될 때 |
+
+<div class="callout callout-tip"><span class="callout-label">정리</span>InnoDB의 RR이 팬텀을 막는 건 <b>MVCC 스냅샷</b> 덕분이고, 그 보호는 <b>일반 읽기에 한정</b>됩니다. <code>FOR UPDATE</code>처럼 현재 데이터를 읽는 순간 스냅샷 밖으로 나가 팬텀이 보일 수 있어요. 그래서 정합성이 절대적인 흐름은 <em>스냅샷에 기대지 말고</em> 비관적·낙관적 락으로 명시적으로 지킵니다.</div>
