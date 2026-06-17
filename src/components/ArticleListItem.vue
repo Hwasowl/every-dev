@@ -23,7 +23,7 @@ const state = computed(() => {
       <span class="badge">
         <template v-if="state === 'read'">읽음</template>
         <template v-else-if="state === 'progress'">{{ progress }}% 읽는 중</template>
-        <template v-else>안 읽음 · {{ article.minutes }}분</template>
+        <template v-else>안 읽음 {{ article.minutes }}분</template>
       </span>
     </div>
   </RouterLink>

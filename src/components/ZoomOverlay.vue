@@ -25,7 +25,7 @@ const zoomOut = () => (scale.value = Math.max(0.5, scale.value - 0.25))
       <div v-if="open" class="ovl" @click.self="emit('close')">
         <div class="ovl-top">
           <button class="x" @click="emit('close')">✕</button>
-          <span class="lab">{{ type === 'diagram' ? '다이어그램' : '코드' }} · 확대해서 보기</span>
+          <span class="lab">{{ type === 'diagram' ? '다이어그램' : '코드' }} 확대해서 보기</span>
           <div class="zoom">
             <button @click="zoomOut">−</button>
             <button @click="zoomIn">+</button>
@@ -34,7 +34,7 @@ const zoomOut = () => (scale.value = Math.max(0.5, scale.value - 0.25))
         <div class="ovl-stage thin-scroll">
           <div class="ovl-inner" :class="type" :style="{ transform: `scale(${scale})` }" v-html="html"></div>
         </div>
-        <div class="ovl-foot">밀어서 이동 · +/− 로 확대 · 빈 곳을 탭하면 닫힘</div>
+        <div class="ovl-foot">밀어서 이동하고, +/− 로 확대, 빈 곳을 탭하면 닫힙니다</div>
       </div>
     </Transition>
   </Teleport>

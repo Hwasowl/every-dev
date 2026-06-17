@@ -9,8 +9,8 @@
 ```mermaid
 flowchart TD
     A["WHERE brand_id = 1<br/>ORDER BY price"] --> B{"인덱스 있나?"}
-    B -->|없음| C["풀스캔<br/>rows 10,000 · filesort"]
-    B -->|"(brand_id, price)"| D["인덱스 스캔<br/>rows 200 · using index"]
+    B -->|없음| C["풀스캔<br/>rows 10,000, filesort"]
+    B -->|"(brand_id, price)"| D["인덱스 스캔<br/>rows 200, using index"]
 ```
 
 ## 단일 vs 복합 인덱스

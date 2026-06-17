@@ -8,9 +8,6 @@ import msgWaitingQueue from './content/msg-waiting-queue.md?raw'
 import msgRedisRanking from './content/msg-redis-ranking.md?raw'
 import resilienceFailureReady from './content/resilience-failure-ready.md?raw'
 import testTdd from './content/test-tdd.md?raw'
-import netTcp from './content/net-tcp-handshake.md?raw'
-import osProcess from './content/os-process-thread.md?raw'
-import dsHash from './content/ds-hash-table.md?raw'
 
 export const articles = [
   // 데이터베이스
@@ -38,12 +35,12 @@ export const articles = [
     minutes: 6,
     body: dbCache,
   },
-  // 아키텍처 · 설계
+  // 아키텍처
   {
     id: 'arch-software-design',
     categoryId: 'architecture',
     title: '요구사항은 어떻게 도메인 모델과 ERD가 되는가',
-    summary: '유스케이스·유비쿼터스 언어·시퀀스·ERD로 이어지는 설계 한 줄기.',
+    summary: '유스케이스, 유비쿼터스 언어, 시퀀스, ERD로 이어지는 설계 한 줄기.',
     minutes: 7,
     body: archSoftwareDesign,
   },
@@ -51,16 +48,16 @@ export const articles = [
     id: 'arch-domain-modeling',
     categoryId: 'architecture',
     title: '좋아요는 왜 likeCount++로 끝나면 안 될까',
-    summary: 'Entity·VO·서비스 구분과 DIP로 만드는 테스트 가능한 구조.',
+    summary: 'Entity, VO, 서비스 구분과 DIP로 만드는 테스트 가능한 구조.',
     minutes: 7,
     body: archDomainModeling,
   },
-  // 메시징 · 이벤트
+  // 메시징
   {
     id: 'msg-event-kafka',
     categoryId: 'messaging',
     title: '무거운 주문 트랜잭션, 이벤트로 쪼개도 될까',
-    summary: 'AFTER_COMMIT 이벤트 분리부터 Kafka·Outbox·멱등 Consumer까지.',
+    summary: 'AFTER_COMMIT 이벤트 분리부터 Kafka, Outbox, 멱등 Consumer까지.',
     minutes: 9,
     body: msgEventKafka,
   },
@@ -85,7 +82,7 @@ export const articles = [
     id: 'resilience-failure-ready',
     categoryId: 'resilience',
     title: 'PG 서버가 멈추면 내 시스템도 같이 죽을까',
-    summary: '타임아웃·재시도·서킷브레이커·폴백으로 장애 전파를 끊는 법.',
+    summary: '타임아웃, 재시도, 서킷브레이커, 폴백으로 장애 전파를 끊는 법.',
     minutes: 7,
     body: resilienceFailureReady,
   },
@@ -97,33 +94,6 @@ export const articles = [
     summary: 'TDD의 본질과 테스트 더블, 테스트 가능한 구조로 바꾸는 법.',
     minutes: 7,
     body: testTdd,
-  },
-  // 네트워크
-  {
-    id: 'net-tcp-handshake',
-    categoryId: 'network',
-    title: 'TCP 3-way handshake',
-    summary: '연결은 어떻게 신뢰를 만드는가. 왜 하필 세 번인가.',
-    minutes: 4,
-    body: netTcp,
-  },
-  // 운영체제
-  {
-    id: 'os-process-thread',
-    categoryId: 'os',
-    title: '프로세스와 스레드, 무엇이 다른가',
-    summary: '격리와 공유. 이 한 끗이 동시성 버그의 성격을 가른다.',
-    minutes: 4,
-    body: osProcess,
-  },
-  // 자료구조
-  {
-    id: 'ds-hash-table',
-    categoryId: 'ds',
-    title: '해시 테이블은 어떻게 O(1)인가',
-    summary: '키를 주소로 바꾸는 계산, 그리고 충돌이라는 현실.',
-    minutes: 4,
-    body: dsHash,
   },
 ]
 

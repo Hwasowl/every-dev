@@ -67,7 +67,7 @@ flowchart TD
 
 ## 왜 이렇게 동작할까
 
-락은 _지금 존재하는 실제 행_ 에 걸어야 다른 트랜잭션의 수정을 막을 수 있습니다. undo log로 재구성한 과거 버전엔 잠글 대상이 없죠. 그래서 잠금 읽기·UPDATE·DELETE는 스냅샷을 무시하고 **최신 커밋본을 다시 읽습니다(current read).**
+락은 _지금 존재하는 실제 행_ 에 걸어야 다른 트랜잭션의 수정을 막을 수 있습니다. undo log로 재구성한 과거 버전엔 잠글 대상이 없죠. 그래서 잠금 읽기, UPDATE, DELETE는 스냅샷을 무시하고 **최신 커밋본을 다시 읽습니다(current read).**
 
 | 읽기 종류 | 읽는 대상 | 팬텀 |
 | --- | --- | --- |
@@ -79,9 +79,9 @@ flowchart TD
 
 ## 실무에선 — 락 전략으로 막는다
 
-팬텀을 만든 그 `FOR UPDATE` 가 사실은 **비관적 락** 의 도구입니다. 정합성이 중요한 흐름(재고·좌석·포인트)에선 _처음부터_ 의도적으로 락을 걸어, 다른 트랜잭션이 끼어들 틈(갭)을 없앱니다. JPA는 두 가지 전략을 줍니다.
+팬텀을 만든 그 `FOR UPDATE` 가 사실은 **비관적 락** 의 도구입니다. 정합성이 중요한 흐름(재고, 좌석, 포인트)에선 _처음부터_ 의도적으로 락을 걸어, 다른 트랜잭션이 끼어들 틈(갭)을 없앱니다. JPA는 두 가지 전략을 줍니다.
 
-**😠 비관적 락** — 읽는 순간 DB에 락을 걸어 남이 못 건드리게 선점합니다. `SELECT … FOR UPDATE` 가 이것이고, JPA에선 `@Lock(PESSIMISTIC_WRITE)`. 안정적이지만 대기·데드락·성능 비용이 있습니다.
+**😠 비관적 락** — 읽는 순간 DB에 락을 걸어 남이 못 건드리게 선점합니다. `SELECT … FOR UPDATE` 가 이것이고, JPA에선 `@Lock(PESSIMISTIC_WRITE)`. 안정적이지만 대기, 데드락, 성능 비용이 있습니다.
 
 ```java
 @Lock(LockModeType.PESSIMISTIC_WRITE)
@@ -89,7 +89,7 @@ flowchart TD
 Stock findByIdForUpdate(@Param("id") Long id);
 ```
 
-**🙂 낙관적 락** — 락을 걸지 않고, 커밋 시점에 버전(`@Version`)을 비교해 충돌을 감지합니다. 충돌하면 `OptimisticLockingFailureException` 으로 한 명만 성공시키고 나머지는 실패·재시도합니다.
+**🙂 낙관적 락** — 락을 걸지 않고, 커밋 시점에 버전(`@Version`)을 비교해 충돌을 감지합니다. 충돌하면 `OptimisticLockingFailureException` 으로 한 명만 성공시키고 나머지는 실패, 재시도합니다.
 
 ```java
 @Entity
@@ -102,10 +102,10 @@ class Stock {
 
 | 전략 | 장점 | 단점 | 적합한 상황 |
 | --- | --- | --- | --- |
-| 비관적 락 | 정합성 보장 | 데드락·성능 저하 | 충돌 잦고 꼭 지켜야 할 자원 |
+| 비관적 락 | 정합성 보장 | 데드락, 성능 저하 | 충돌 잦고 꼭 지켜야 할 자원 |
 | 낙관적 락 | 락 없이 빠름 | 충돌 시 예외 처리 | 충돌 드물고 한 명만 성공시키면 될 때 |
 
-<div class="callout callout-tip"><span class="callout-label">정리</span>InnoDB의 RR이 팬텀을 막는 건 <b>MVCC 스냅샷</b> 덕분이고, 그 보호는 <b>일반 읽기에 한정</b>됩니다. <code>FOR UPDATE</code>처럼 현재 데이터를 읽는 순간 스냅샷 밖으로 나가 팬텀이 보일 수 있어요. 그래서 정합성이 절대적인 흐름은 <em>스냅샷에 기대지 말고</em> 비관적·낙관적 락으로 명시적으로 지킵니다.</div>
+<div class="callout callout-tip"><span class="callout-label">정리</span>InnoDB의 RR이 팬텀을 막는 건 <b>MVCC 스냅샷</b> 덕분이고, 그 보호는 <b>일반 읽기에 한정</b>됩니다. <code>FOR UPDATE</code>처럼 현재 데이터를 읽는 순간 스냅샷 밖으로 나가 팬텀이 보일 수 있어요. 그래서 정합성이 절대적인 흐름은 <em>스냅샷에 기대지 말고</em> 비관적, 낙관적 락으로 명시적으로 지킵니다.</div>
 
 ## 참고
 

@@ -4,7 +4,7 @@
 
 도메인 모델링은 단순한 클래스 설계가 아니라, 현실의 개념과 규칙을 **객체의 행위와 책임**으로 옮기는 작업입니다. 비즈니스 의미가 커질 수 있는 개념은 처음부터 도메인 단위로 격리하는 편이 응집도와 확장성에 유리해요.
 
-## Entity · VO · Domain Service
+## Entity, VO, Domain Service
 
 설계의 출발은 객체의 성격을 구분하는 것입니다.
 
@@ -30,7 +30,7 @@ record Money(BigDecimal amount) {
 
 ## "하는 놈"은 도메인이 아니라 서비스다
 
-고유한 상태나 정체성 없이 계산·전송·처리 같은 **연산 하나만** 하는 객체는 도메인 개념처럼 위장하면 안 됩니다. 서비스의 특징은 둘 — _상태가 없어_ 입력/출력이 명확하고, _클라이언트에게 무언가를 제공_ 하는 모듈이라는 것. 도메인 모델을 더럽히지 않고 로직을 분리하는 용도로 쓰입니다.
+고유한 상태나 정체성 없이 계산, 전송, 처리 같은 **연산 하나만** 하는 객체는 도메인 개념처럼 위장하면 안 됩니다. 서비스의 특징은 둘 — _상태가 없어_ 입력/출력이 명확하고, _클라이언트에게 무언가를 제공_ 하는 모듈이라는 것. 도메인 모델을 더럽히지 않고 로직을 분리하는 용도로 쓰입니다.
 
 ## 의존성은 도메인을 향한다 (DIP)
 
@@ -52,8 +52,8 @@ class OrderRepositoryImpl implements OrderRepository {
 ```mermaid
 flowchart TD
     A["Interfaces<br/>Controller"] --> B["Application<br/>Facade"]
-    B --> C["Domain<br/>Entity · VO · Service"]
-    D["Infrastructure<br/>JPA · Redis · Kafka"] --> C
+    B --> C["Domain<br/>Entity, VO, Service"]
+    D["Infrastructure<br/>JPA, Redis, Kafka"] --> C
 ```
 
 <div class="callout callout-tip"><span class="callout-label">KEY POINT</span>중요한 건 레이어드냐 헥사고날이냐 클린이냐가 <b>아닙니다.</b> 모든 의존성이 도메인을 향하게 만들어 도메인이 스스로를 책임지는 구조여야, 그때 비로소 <em>테스트 가능한 코드</em>가 됩니다.</div>
