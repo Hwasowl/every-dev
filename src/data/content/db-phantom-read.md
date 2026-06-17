@@ -75,7 +75,7 @@ flowchart TD
 | SELECT … FOR UPDATE | 현재 최신 데이터 | 보일 수 있음 |
 | UPDATE / DELETE | 현재 최신 데이터 | 보일 수 있음 |
 
-<div class="callout callout-q"><span class="callout-label">한 걸음 더</span>그럼 InnoDB는 잠금 읽기의 팬텀을 못 막나? — <b>Next-Key Lock</b>(레코드 락 + 갭 락)으로 막습니다. 단, <em>처음부터</em> 잠금 읽기로 범위를 잠갔을 때 얘기예요. 위 예시는 일반 읽기로 갭을 안 잠근 채 세션 B가 끼어들 수 있었기 때문에 팬텀이 난 겁니다.</div>
+<div class="callout callout-q"><span class="callout-label">한 걸음 더</span>그럼 InnoDB는 잠금 읽기의 팬텀을 못 막나? — <b>Next-Key Lock</b>으로 막습니다. 존재하는 행만 잠그는 게 아니라, <b>행과 행 사이의 빈 구간(gap)까지 잠가</b> 그 범위에 누가 새 행을 <code>INSERT</code> 하지 못하게 막는 거예요. 그러면 없던 행이 생길 수 없으니 팬텀도 없죠. 단, 이건 <em>처음부터</em> 잠금 읽기로 범위를 잠갔을 때 얘기입니다. 위 예시는 일반 읽기라 빈 구간을 안 잠갔고, 그 틈에 세션 B가 끼어들 수 있었기 때문에 팬텀이 난 겁니다.</div>
 
 ## 실무에선 — 락 전략으로 막는다
 

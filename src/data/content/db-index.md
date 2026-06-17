@@ -35,7 +35,7 @@ CREATE INDEX idx_brand_price ON products(brand_id, price);
 
 `EXPLAIN` 의 `Extra` 에 `Using filesort` 가 보이면 인덱스 정렬이 안 먹고 별도 정렬이 추가된 것, `Using index` 면 인덱스만으로 처리된 것입니다. `key` 가 null이면 인덱스 미사용이고요.
 
-<div class="callout callout-q"><span class="callout-label">주의</span>자주 바뀌는 컬럼에 인덱스를 남발하면 <b>쓰기 성능</b>이 떨어집니다. 모수가 작을 땐 풀스캔이 오히려 빠를 수도 있어요. 카디널리티가 높은 컬럼에 거는 게 기본입니다.</div>
+<div class="callout callout-q"><span class="callout-label">주의</span>자주 바뀌는 컬럼에 인덱스를 남발하면 <b>쓰기 성능</b>이 떨어집니다(행이 바뀔 때마다 인덱스도 같이 고쳐야 하니까요). 모수가 작을 땐 풀스캔이 오히려 빠를 수도 있어요. 그리고 인덱스는 <b>카디널리티</b>, 즉 <em>값의 다양성</em>(중복이 적을수록 높음 — 성별은 낮고 주민번호는 높음)이 큰 컬럼에 거는 게 기본입니다. 다양할수록 한 번에 후보를 확 좁혀 주니까요.</div>
 
 ## 참고
 

@@ -61,7 +61,7 @@ export const articles = [
     categoryId: 'messaging',
     title: '무거운 주문 트랜잭션, 이벤트로 쪼개도 될까',
     summary: 'AFTER_COMMIT 이벤트 분리부터 Kafka·Outbox·멱등 Consumer까지.',
-    minutes: 8,
+    minutes: 9,
     body: msgEventKafka,
   },
   {
