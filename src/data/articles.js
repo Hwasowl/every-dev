@@ -1,8 +1,10 @@
 import dbPhantom from './content/db-phantom-read.md?raw'
 import dbIndex from './content/db-index.md?raw'
 import dbCache from './content/db-cache-ttl.md?raw'
+import dbLikeCountSort from './content/db-like-count-sort.md?raw'
 import archSoftwareDesign from './content/arch-software-design.md?raw'
 import archDomainModeling from './content/arch-domain-modeling.md?raw'
+import archSpringRequest from './content/arch-spring-request-handling.md?raw'
 import msgEventKafka from './content/msg-event-kafka.md?raw'
 import msgWaitingQueue from './content/msg-waiting-queue.md?raw'
 import msgRedisRanking from './content/msg-redis-ranking.md?raw'
@@ -23,9 +25,17 @@ export const articles = [
     id: 'db-index',
     categoryId: 'database',
     title: '인덱스는 왜 빨라질까',
-    summary: 'B-Tree 책갈피로 풀스캔을 건너뛰는 원리와 복합 인덱스의 순서.',
-    minutes: 5,
+    summary: 'B-Tree 책갈피, 복합 인덱스 순서, EXPLAIN과 카디널리티까지.',
+    minutes: 8,
     body: dbIndex,
+  },
+  {
+    id: 'db-like-count-sort',
+    categoryId: 'database',
+    title: '좋아요 수로 정렬하면 왜 느려질까',
+    summary: '조인 집계 정렬의 한계와 비정규화, 조회 전용 Pre-aggregation.',
+    minutes: 7,
+    body: dbLikeCountSort,
   },
   {
     id: 'db-cache-ttl',
@@ -51,6 +61,14 @@ export const articles = [
     summary: 'Entity, VO, 서비스 구분과 DIP로 만드는 테스트 가능한 구조.',
     minutes: 7,
     body: archDomainModeling,
+  },
+  {
+    id: 'arch-spring-request-handling',
+    categoryId: 'architecture',
+    title: '스프링부트는 요청 1만 개를 어떻게 동시에 처리할까',
+    summary: '내장 톰캣 스레드 풀, NIO 커넥터, accept-count와 max-connections.',
+    minutes: 7,
+    body: archSpringRequest,
   },
   // 메시징
   {
